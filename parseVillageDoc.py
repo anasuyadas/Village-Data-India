@@ -10,7 +10,8 @@ from bs4 import BeautifulSoup
 
 
 def loadVillageData(file):
-
+    # make soup for each file and return list of lists of table by tags
+    
     #files = [f for f in os.listdir(datapath) is os.path.isfile(f) and 'Microplanning' in f and '.html' in f ] 
 
     #for file in files:
@@ -25,11 +26,8 @@ def loadVillageData(file):
     return (table, villageName)
 
 #---------------------------------------------------------------------------------
-
-
 def getTableData(table,villageName):
-    
-    villageData=[]
+   #extract text data from HTML tags for each table in the parent soup    
     
     table_body = table[tabNum].find('tbody')
 
@@ -39,16 +37,15 @@ def getTableData(table,villageName):
         cols = row.find_all('td')
         cols = [ele.text.strip() for ele in cols]
         data.append(cols)
-        data2=pd.DataFrame(data)
-        data2=data2.T
-        data2[]=villageName  
-
-    villageData.append(data2)
+        villageData=pd.DataFrame(data)
+        villageData=villageData.T
+        villageData['village']=villageName  
 
     return villageData
 
 
 #---------------------------------------------------------------------------------
+
 
 files = [f for f in os.listdir(datapath) is os.path.isfile(f) and 'Microplanning' in f and '.html' in f ] 
 
@@ -59,8 +56,9 @@ for file in files:
     villageName, table=loadVillageData(file)
     allVillageTable=allVillageTable.append(table)
         for x in range(0, en(table)):
-            parsedTable=
-            globals()['table%s' % x] = 
+            parsedTable=pd.DataFrame()
+            parsedTable=getTableData(table,villageName)
+            globals()['table%s' % x] = self.append(parsedTable)
 
 
 
